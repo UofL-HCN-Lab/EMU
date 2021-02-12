@@ -30,6 +30,6 @@ tdata{i} = record(:,idx(i):idx(i+1));
 end
 %grab the last one
 tdata{size(idx,1)} = record(:,idx(i):idx(end));
-tdata = reshape(tdata,[32 1]); 
+tdatareshape(tdata,[1 32]);
 
 
