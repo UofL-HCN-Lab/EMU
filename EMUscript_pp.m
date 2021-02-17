@@ -1,9 +1,9 @@
 % natus debug
-cd('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/github/EMU');
+cd('/Users/jessimarie/Documents/GitHub/EMU');
 
-[hdr, record] = edfread('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/natus/test_ monkeylo_2c734bac-e3b4-4c96-8c1f-a4fb94ca2357.edf');
+[hdr, record] = edfread('/Users/jessimarie/Downloads/test_ monkeylo_2c734bac-e3b4-4c96-8c1f-a4fb94ca2357.edf');
 
-[data,MLConfig,TrialRecord,filename,varlist] = mlread('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/natus/20201211_1121_0000000_test2_SimonTask_v13_ML.bhv2');
+[data,MLConfig,TrialRecord,filename,varlist] = mlread('/Users/jessimarie/Downloads/20201211_1121_0000000_test2_SimonTask_v13_ML.bhv2');
 
 codes = [];
 times = [];
