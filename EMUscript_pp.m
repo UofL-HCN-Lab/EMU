@@ -32,4 +32,4 @@ end
 tdata{size(idx,1)} = record(:,idx(i):idx(end));
 tdata = reshape(tdata,[32 1]); 
 
-
+%dictionary
