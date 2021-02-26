@@ -1,8 +1,12 @@
-% natus debug
+%% natus && monkey logic
+% @JMcD Febuary 2021
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% set github path
+% ! ensure you are in correct branch ! %
 cd('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/github/EMU');
 
+% pull in data
 [hdr, record] = edfread('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/natus/test_ monkeylo_2c734bac-e3b4-4c96-8c1f-a4fb94ca2357.edf');
-
 [data,MLConfig,TrialRecord,filename,varlist] = mlread('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/natus/20201211_1121_0000000_test2_SimonTask_v13_ML.bhv2');
 
 codes = [];
@@ -17,20 +21,26 @@ codes = codes';
 times = times';
 trigchan = record(145,:).';
 figure; plot(trigchan);
-%cut natus data to trial based on trigger channel output voltage
+
+% add dependencies - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% fieldtrip
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% addpath '/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/toolbox/fieldtrip'
+% ft_defaults
+% cfg = [];
+% cfg.dataset = record;
+% dataNatus = ft_preprocessing(cfg)
+
+%cut natus data to trial based on trigger channel(145) output voltage
+
+for i = size(record,2)
+ if ceil(record(145,i)) == -707
+     tdata_natus = record(:,i);
+ else
 tstart_natus = find(ceil(record(145,:))==-707).'; 
 idx_natus = find(diff(tstart_natus)~=1);
 
-i = [];
-for i = 2:size(idx_natus)-1
-%     % loop through and put trial data into cells
- tdata_natus{1} = record(:,tstart_natus(1):idx_natus(i-1));
-tdata_natus{i} = record(:,idx_natus(i):idx_natus(i+1));
 
-end
-%grab the last one
-tdata_natus{size(idx_natus,1)} = record(:,idx_natus(i):idx_natus(end));
-tdata_natus = reshape(tdata_natus,[32 1]); 
 
 %sort ML codes into subsequent trials to match natus data
 tstart_ml = find(codes ==9);
@@ -109,59 +119,59 @@ for j = 1:size(tdata{1,2},1)
     vec = tdata{1,2}{j,1}(1,:);
     idxStart = find(vec ==1);
     
-% instructions code - - - - - - - - - - - - - - - - - - - - - 
+% instructions code - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if vec(1,idxStart+1) == 8
         baseline_trialdata = tdata{1,2}{jj,1};
         
-% start trial and cue on indicataed a trial  - - - - - - - - - - - - - - - - - - - - - 
+% start trial and cue on indicataed a trial  - - - - - - - - - - - - - - - 
     elseif vec(1,idxStart+1) == 2 && vec(1,idxStart+2) == 4
         trialdata{j,1}(:) = tdata{1,2}{j,1};
         
-% cue for left button press  - - - - - - - - - - - - - - - - - - - - - 
+% cue for left button press  - - - - - - - - - - - - - - - - - - - - - - - 
         if trialdata{j,1}(idxStart+3) == 6
             trialdata{j,2}(:) = tdata{1,2}{j,1};
-% congruent ==> left cue left press
+    % congruent ==> left cue left press
             if trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) ==10
                 ltd{j,1}(:) = tdata{1,2}{j,1};% Cong_Left_Left          = 10;
-% congruent ==> left right                 
+    % congruent ==> left right                 
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) ==11
                     ltd{j,2}(:) = tdata{1,2}{j,1};% Cong_Left_Right         = 11;
-% congruent ==> no response                    
+    % congruent ==> no response                    
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) ==12
                         ltd{j,3}(:) = tdata{1,2}{j,1};% Cong_Left_NoResp        = 12;
-% incongruent ==>                        
+    % incongruent ==>                        
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) ==19
                             ltd{j,4}(:) = tdata{1,2}{j,1};% Incong_Left_Left        = 19;
-% incongruent ==>                               
+    % incongruent ==>                               
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) ==20
                                 ltd{j,5}(:) = tdata{1,2}{j,1};% Incong_Left_Right       = 20;
-% incongruent ==> no response                                  
+    % incongruent ==> no response                                  
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) ==21
                                     ltd{j,6}(:) = tdata{1,2}{j,1};% Incong_Left_NoResp      = 21;
-            end
+            end % left hand trial classification
 % cue for right button press  - - - - - - - - - - - - - - - - - - - - - 
         elseif trialdata{j,1}(idxStart+3) == 7
             trialdata{j,3}(:) = tdata{1,2}{j,1};
 
-% congruent ==> left cue right press
+    % congruent ==> left cue right press
             if trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 13
                 rtd{j,1}(:) = tdata{1,2}{j,1};% Cong_Right_Left         = 13;
-% congruent ==> left right                 
+    % congruent ==> left right                 
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 14
                     rtd{j,2}(:) = tdata{1,2}{j,1};% Cong_Right_Right        = 14;
-% congruent ==> no response                    
+    % congruent ==> no response                    
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 15
                         rtd{j,3}(:) = tdata{1,2}{j,1};% Cong_Right_NoResp       = 15;   
-% incongruent ==>                        
+    % incongruent ==>                        
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 22
                             rtd{j,4}(:) = tdata{1,2}{j,1};% Incong_Right_Right      = 23;
-% incongruent ==>                               
+    % incongruent ==>                               
             elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 23
                                 rtd{j,5}(:) = tdata{1,2}{j,1};% Incong_Right_NoResp     = 24; 
-% incongruent ==> no response                                  
-            elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 241
+    % incongruent ==> no response                                  
+            elseif trialdata{j,1}(idxStart+3) == 6 && trialdata{j,1}(idxStart+4) == 24
                                     rtd{j,6}(:) = tdata{1,2}{j,1};% Incong_Left_NoResp      = 21;  
-            end % right ha
+            end % right hand trial classification
 
         end % left / right button cue
     end % trial codes vector

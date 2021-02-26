@@ -1,8 +1,12 @@
-% natus debug
+%% natus && monkey logic
+% @JMcD Febuary 2021
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% set github path
+% ! ensure you are in correct branch ! %
 cd('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/github/EMU');
 
+% pull in data
 [hdr, record] = edfread('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/natus/test_ monkeylo_2c734bac-e3b4-4c96-8c1f-a4fb94ca2357.edf');
-
 [data,MLConfig,TrialRecord,filename,varlist] = mlread('/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/natus/20201211_1121_0000000_test2_SimonTask_v13_ML.bhv2');
 
 codes = [];
@@ -17,27 +21,37 @@ codes = codes';
 times = times';
 trigchan = record(145,:).';
 figure; plot(trigchan);
-%cut natus data to trial based on trigger channel output voltage
+
+% add dependencies - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% fieldtrip
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% addpath '/Users/jessica/OneDrive - University of Louisville/library/codeLibrary/toolbox/fieldtrip'
+% ft_defaults
+% cfg = [];
+% cfg.dataset = record;
+% dataNatus = ft_preprocessing(cfg)
+
+%cut natus data to trial based on trigger channel(145) output voltage
+for i = 1:size(record,2)
+    if ceil(record(145,i)) == -707
+        natus{newrow,1} = record;
+    elseif ceil(record(145,i)) ~= -707
+        natus{newrow,2} = record;
+        newrow = newrow+1;
+    end
+end
 tstart_natus = find(ceil(record(145,:))==-707).'; 
 idx_natus = find(diff(tstart_natus)~=1);
 
-i = [];
-for i = 2:size(idx_natus)-1
-%     % loop through and put trial data into cells
- tdata_natus{1} = record(:,tstart_natus(1):idx_natus(i-1));
-tdata_natus{i} = record(:,idx_natus(i):idx_natus(i+1));
 
-end
-%grab the last one
-tdata_natus{size(idx_natus,1)} = record(:,idx_natus(i):idx_natus(end));
-tdata_natus = reshape(tdata_natus,[32 1]); 
 
 %sort ML codes into subsequent trials to match natus data
 tstart_ml = find(codes ==9);
 tend_ml = find(codes ==18); % ML code trial end
 ntrials = size(tstart_ml,2);
 
-% @ % bug check: natus and monkey logic trials should match (-2)
+% @ % bug check: natus and monkey logic trials should match (-2) % @ %
+
 tdata_ml = []
 for ii = 1:ntrials
     tdata_ml{ii,1} = codes(tstart_ml(1,ii):tend_ml(1,ii));
