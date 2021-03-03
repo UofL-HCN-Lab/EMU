@@ -1,4 +1,4 @@
-function [trl, event] = ft_trialfun_edf_NCH(cfg)
+function [trl, event] = ft_trialfun_edf(cfg)
 
 % FT_TRIALFUN_EDF is an example trial function. It searches for events
 % of type "up" in an analog data channel, as indentified by thresholding. 
