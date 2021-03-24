@@ -51,6 +51,3 @@ dataFC = ft_selectdata(cfg, data_all);
 % Save the preprocessed data to disk
 save ~/Documents/GitHub/TutorialData_fieldtrip/PreprocData dataFIC dataIC dataFC -append
 
-
-
-
