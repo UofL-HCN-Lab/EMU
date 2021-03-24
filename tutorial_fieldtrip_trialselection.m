@@ -7,13 +7,13 @@ clear
 clc
 
 % add path to fieldtrip installation
-addpath('/Users/nicholashindy/Documents/GitHub/fieldtrip');
+addpath('~/Documents/GitHub/fieldtrip');
 ft_defaults
 
 
 %% Do the trial definition for the all conditions together:
 cfg                         = [];
-cfg.dataset                 = 'Subject01.ds';
+cfg.dataset                 = '~/Documents/GitHub/TutorialData_fieldtrip/Subject01/Subject01.ds';
 cfg.trialfun                = 'ft_trialfun_general'; % this is the default
 cfg.trialdef.eventtype      = 'backpanel trigger';
 cfg.trialdef.eventvalue     = [3 5 9]; % the values of the stimulus trigger for the three conditions
@@ -29,8 +29,7 @@ cfg.channel    = {'MEG' 'EOG'};
 cfg.continuous = 'yes';
 data_all = ft_preprocessing(cfg);
 
-Save the data to disk
-
-    save PreprocData data_all
+% Save the data to disk
+save PreprocData data_all
 
     
