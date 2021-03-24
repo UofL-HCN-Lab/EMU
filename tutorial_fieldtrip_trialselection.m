@@ -30,6 +30,27 @@ cfg.continuous = 'yes';
 data_all = ft_preprocessing(cfg);
 
 % Save the data to disk
-save PreprocData data_all
+save ~/Documents/GitHub/TutorialData_fieldtrip/PreprocData data_all
 
-    
+
+%% Visualize the data
+plot(data_all.time{1}, data_all.trial{1}(130,:))
+
+
+%% Split up the conditions by selecting trials according to their trigger value (in data_all.trialinfo).
+cfg=[];
+cfg.trials = data_all.trialinfo==3;
+dataFIC = ft_selectdata(cfg, data_all);
+
+cfg.trials = data_all.trialinfo==5;
+dataIC = ft_selectdata(cfg, data_all);
+
+cfg.trials = data_all.trialinfo==9;
+dataFC = ft_selectdata(cfg, data_all);
+
+% Save the preprocessed data to disk
+save ~/Documents/GitHub/TutorialData_fieldtrip/PreprocData dataFIC dataIC dataFC -append
+
+
+
+
