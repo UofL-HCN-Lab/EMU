@@ -2,12 +2,12 @@
 % https://www.fieldtriptoolbox.org/tutorial/preprocessing/
 
 
-% boilerplate
+%% boilerplate
 clear
 clc
 
 
-% Do the trial definition for the all conditions together:
+%% Do the trial definition for the all conditions together:
 cfg                         = [];
 cfg.dataset                 = 'Subject01.ds';
 cfg.trialfun                = 'ft_trialfun_general'; % this is the default
@@ -18,3 +18,13 @@ cfg.trialdef.prestim        = 1; % in seconds
 cfg.trialdef.poststim       = 2; % in seconds
 
 cfg = ft_definetrial(cfg);
+
+
+%%
+cfg.channel    = {'MEG' 'EOG'};
+cfg.continuous = 'yes';
+data_all = ft_preprocessing(cfg);
+
+Save the data to disk
+
+    save PreprocData data_all
