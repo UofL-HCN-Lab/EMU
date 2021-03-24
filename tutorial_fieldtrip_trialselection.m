@@ -6,6 +6,10 @@
 clear
 clc
 
+% add path to fieldtrip installation
+addpath('/Users/nicholashindy/Documents/GitHub/fieldtrip');
+ft_defaults
+
 
 %% Do the trial definition for the all conditions together:
 cfg                         = [];
@@ -20,7 +24,7 @@ cfg.trialdef.poststim       = 2; % in seconds
 cfg = ft_definetrial(cfg);
 
 
-%%
+%% The output of ft_definetrial can be used for ft_preprocessing
 cfg.channel    = {'MEG' 'EOG'};
 cfg.continuous = 'yes';
 data_all = ft_preprocessing(cfg);
@@ -28,3 +32,5 @@ data_all = ft_preprocessing(cfg);
 Save the data to disk
 
     save PreprocData data_all
+
+    
