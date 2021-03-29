@@ -68,9 +68,13 @@ idx_temp = find(diff(trigchan)~=0);
 idx = idx_temp + 1;
 values = trigchan(idx);
 
+%identify trigchan timepoints that map onto the start of each trial (-7.074753948265843e+02)
+timepoints = idx(ceil(values)==-707);
+
 %create a "mock" trigger channel with zeros everywhere except the start of each trial
 trigchan_mock = zeros(length(trigchan),1);
-trigchan_mock([489485 498598 502113 505661 508835 510001 513307 517573 522999 523544 525866 529658 532863 540238 544228 547472 551261 555492 560137 561446 563684 568325 571737 575391 580815 586143 590919 596584 600819 605460 610887 615559])=-750;
+% trigchan_mock([489485 498598 502113 505661 508835 510001 513307 517573 522999 523544 525866 529658 532863 540238 544228 547472 551261 555492 560137 561446 563684 568325 571737 575391 580815 586143 590919 596584 600819 605460 610887 615559])=-750;
+trigchan_mock(timepoints)=-750;
 
 %plot trigchan and trigchan_mock as overlay
 plot(trigchan);
