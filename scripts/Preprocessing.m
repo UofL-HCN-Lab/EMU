@@ -1,5 +1,3 @@
-% EMUscript_pp_NCH
-
 clear
 clc
 
