@@ -1,11 +1,8 @@
 % clear; clc
-
 %% set path add deoendencies
 cd 'C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\'
 addpath(genpath( 'C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\EMU'))
-%field trip
-addpath('C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\fieldtrip');
-ft_defaults
+
 %% Loads in edf file
 root = 'C:\Users\jm68130\Box\Dept-Neurosurgery_NRGlab\Data\emu';
 subj = 'testTmp';
