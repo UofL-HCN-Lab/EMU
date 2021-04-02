@@ -1,8 +1,12 @@
 % clear; clc
 
-%% set path add deoendencies
+%% set path add dependencies
 cd 'C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\'
-addpath(genpath( 'C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\EMU'))
+addpath(genpath('C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\EMU\'))
+%monkey logic
+[MLdata,MLConfig,TrialRecord,filename,varlist] = mlread('C:\Users\jm68130\Box\Dept-Neurosurgery_NRGlab\Data\emu\testTmp\20201211_1121_0000000_test2_SimonTask_v13_ML.bhv2');
+%define ML trials for a bug check 
+
 %field trip
 addpath('C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\fieldtrip');
 ft_defaults
