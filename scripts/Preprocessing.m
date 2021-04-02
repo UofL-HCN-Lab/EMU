@@ -1,4 +1,5 @@
-clear; clc
+%PreProcessing Script for ML Natus Data
+%clear; clc
 
 %% set path add dependencies
 cd 'C:\Users\jm68130\OneDrive - University of Louisville\library\codeLibrary\github\'
@@ -23,7 +24,8 @@ cfg.dataset = (fpath)
 eegData = ft_preprocessing(cfg);
 
 %% find trigger
-eegTrigger = eegData(145,:);
+
+eegTrigger = eegData.trial{1,1}(145,:);
 uniqueValues = unique(eegTrigger);
 i = [];k = [];
 for k = [1 2 3 5];
@@ -37,11 +39,23 @@ for k = [1 2 3 5];
     end
 end
 
-%overwrite tigger channel with binary trigger
+%% overwrite tigger channel with binary trigger
     % 1 trial ongoing
     % 0 intertrial period
-eegData(145,:) = eegTrigger;
+trial = 1;
+for n = 1:size(eegTrigger,2)-1
+    if eegTrigger(1,n) == 1
+        etrial{trial,1}(1,n) = eegTrigger(1,n);
+%     elseif eegTrigger(1,n) == 0
+%         etrial{trial,1}(1,n) = eegTrigger(1,n);
+    elseif eegTrigger(1,n) == 0 && eegTrigger(1,n+1) ==1
+        trial = trial +1
+    end
+end
 
+%%
+eegData(145,:) = eegTrigger;
+eegData = eegData.trial{1};
 % trial definition based on trigger
 % cfg.data = eegData;
 % cfg.channel = 'all';
@@ -91,6 +105,7 @@ end
 eegZeros = zeros(length(eegEnd),1);       
 eegTrl = cat(2,eegStart,eegEnd,eegZeros);
 %% Changes trl to new trial matrix and recreates data considering new trials
+eegData = eegData.trial{1};
 cfg.trl = eegTrl
 cfg.channel = 'all';
 cfg = ft_definetrial(cfg)
