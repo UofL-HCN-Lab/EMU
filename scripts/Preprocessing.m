@@ -24,9 +24,15 @@ cfg.dataset = (fpath)
 eegData = ft_preprocessing(cfg);
 
 %% find trigger
-
+% set trigger channel
 eegTrigger = eegData.trial{1,1}(145,:);
+
+%determine unique trigger value
 uniqueValues = unique(eegTrigger);
+
+% overwrite tigger channel with binary trigger and epoch
+    % 1 trial ongoing
+    % 0 intertrial period
 i = [];k = [];
 for k = [1 2 3 5];
     for i = 1:size(eegTrigger,2)
@@ -38,24 +44,24 @@ for k = [1 2 3 5];
         end
     end
 end
-
-%% overwrite tigger channel with binary trigger
-    % 1 trial ongoing
-    % 0 intertrial period
-trial = 1;
-for n = 1:size(eegTrigger,2)-1
-    if eegTrigger(1,n) == 1
-        etrial{trial,1}(1,n) = eegTrigger(1,n);
-%     elseif eegTrigger(1,n) == 0
-%         etrial{trial,1}(1,n) = eegTrigger(1,n);
-    elseif eegTrigger(1,n) == 0 && eegTrigger(1,n+1) ==1
-        trial = trial +1
+% epoch data based on trigger conditional
+trial = 1
+    for n = 1:size(eegTrigger,2)-1
+        if eegTrigger(1,n) == 1 && eegTrigger(1,n+1) == 1 || eegTrigger(1,n+1) == 0
+            etrial{trial,1}(1,n) = eegTrigger(1,n);
+            datatrial{trial,1}(:,n) = eegData.trial{1,1}(:,n);
+        elseif eegTrigger(1,n+1) == 0 && eegTrigger(1,n+1) == 0
+            % inter_trial{trial,1}(1,n) = eegTrigger(1,n);
+            % inter_trialdata{trial,1}(:,n) = eegData.trial{1,1}(:,n);
+            continue
+        elseif eegTrigger(1,n) == 0 && eegTrigger(1,n+1) ==1
+            trial = trial +1;
+        end
     end
-end
-
 %%
+eegData.trial = etrial;
 eegData(145,:) = eegTrigger;
-eegData = eegData.trial{1};
+eegData.trial = datatrial;
 % trial definition based on trigger
 % cfg.data = eegData;
 % cfg.channel = 'all';
@@ -66,7 +72,7 @@ eegData = eegData.trial{1};
 % cfg.trialdef.prestim = 0; % in seconds
 % cfg.trialdef.poststim = 0; % in seconds
 % ieeg = ft_definetrial(cfg);
-
+%{ 
 %% Finds values of electrode 145 indicating a trial, records them and formats them for the cfg
 count = 0;
 eegStart = [];
@@ -106,8 +112,9 @@ eegZeros = zeros(length(eegEnd),1);
 eegTrl = cat(2,eegStart,eegEnd,eegZeros);
 %% Changes trl to new trial matrix and recreates data considering new trials
 eegData = eegData.trial{1};
-cfg.trl = eegTrl
+cfg.trl = eegData.trial
 cfg.channel = 'all';
 cfg = ft_definetrial(cfg)
 eegData = ft_preprocessing(cfg)
 
+%}
