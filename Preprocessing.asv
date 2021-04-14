@@ -171,9 +171,9 @@ for i = 1:ntrials
         
         % start trial and cue on indicataed a trial  - - - - - - - - - - - - - - -
     elseif eegData.MLcodes{1,i}(idx+1) == 2 && eegData.MLcodes{1,i}(idx+2) == 4
-        eegData.trialdata.MLcodes{i,1} = eegData.MLcodes{1,i};
-        eegData.trialdata.trl{i,1} = eegData.trial{1,i};
-        eegData.trialdata.tme{i,1} = eegData.time{1,i};
+        eegData.trialdata.MLcodes{1,i} = eegData.MLcodes{1,i};
+        eegData.trialdata.trl{1,i} = eegData.trial{1,i};
+        eegData.trialdata.tme{1,i} = eegData.time{1,i};
         
         % cue for left button press  - - - - - - - - - - - - - - - - - - - - - - -
         if eegData.MLcodes{1,i}(idx+3) == 6
@@ -192,14 +192,14 @@ for i = 1:ntrials
                 % congruent ==> left cue right press | [Cong_Left_Right = 11]
             elseif eegData.MLcodes{1,i}(idx+3) == 6 && eegData.MLcodes{1,i}(idx+4) ==11
                 %ltd{j,2}(:) = tdata{1,2}{j,1};
-                eegData.trialdata.cong.cds{i,2} = eegData.MLcodes{1,i};
+                eegData.trialdata.cong.cds{i,2}(:) = eegData.MLcodes{1,i};
                 eegData.trialdata.cong.trl{i,2} = eegData.trial{1,i};
                 eegData.trialdata.cong.tme{i,2} = eegData.time{1,i};
                 
                 % congruent ==> no response | [Cong_Left_NoResp = 12]
             elseif eegData.MLcodes{1,i}(idx+3) == 6 && eegData.MLcodes{1,i}(idx+4) ==12
                 %ltd{j,3}(:) = tdata{1,2}{j,1};
-                eegData.trialdata.cong.cds{i,3} = eegData.MLcodes{1,i};
+                eegData.trialdata.cong.cds{i,3}(:) = eegData.MLcodes{1,i};
                 eegData.trialdata.cong.trl{i,3} = eegData.trial{1,i};
                 eegData.trialdata.cong.tme{i,3} = eegData.time{1,i};
                 
